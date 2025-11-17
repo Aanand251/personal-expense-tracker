@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run PersonalExpenseTracker App",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/gradlew",
+      "args": ["installDebug"],
+      "preLaunchTask": "Build & Install App",
+      "postDebugTask": "Launch App"
+    }
+  ]
+}

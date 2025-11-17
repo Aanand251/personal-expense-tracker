@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Personal Expense Tracker</string>
+    <string name="app_logo_desc">App Logo</string>
+    <string name="user_label">User: %1$s</string>
+    <string name="logout_msg">Logged Out</string>
+    <string name="total_savings">Total Savings: %1$s</string>
+    <string name="analytics_icon_desc">Analytics Icon</string>
+
+</resources>

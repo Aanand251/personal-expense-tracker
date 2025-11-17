@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build & Install App",
+      "type": "shell",
+      "command": "./gradlew installDebug",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Launch App",
+      "type": "shell",
+      "command": "adb shell am start -n com.yourpackagename/.LoginActivity",
+      "problemMatcher": []
+    }
+  ]
+}
