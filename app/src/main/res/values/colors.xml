@@ -26,6 +26,8 @@
     <color name="md_theme_dark_onSecondary">#332D41</color>
     <color name="md_theme_dark_background">#121212</color>
     <color name="teal_700">#018786</color>
+    <color name="gray">#FF888888</color>
+
 
 
 

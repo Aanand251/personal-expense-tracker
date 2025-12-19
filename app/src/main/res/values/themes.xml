@@ -1,16 +1,41 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- App theme -->
-    <style name="Theme.PersonalExpenseTracker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Status bar ka color -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    <!-- DARK MODE DISABLED: Using Light theme only (not DayNight) -->
+    <!-- Changed from Theme.Material3.DayNight.NoActionBar to Theme.Material3.Light.NoActionBar -->
+    <style name="Theme.PersonalExpenseTracker" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary colors -->
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <!-- Secondary and other colors -->
+        <item name="colorOnPrimaryContainer">#000000</item>
+        <!-- Secondary colors -->
         <item name="colorSecondary">@color/md_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <!-- Backgrounds -->
+        <item name="colorSecondaryContainer">#E8DEF8</item>
+        <item name="colorOnSecondaryContainer">#1D192B</item>
+        <!-- Tertiary colors (required by Material3) -->
+        <item name="colorTertiary">@color/purple_500</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="colorTertiaryContainer">#FFD8E4</item>
+        <item name="colorOnTertiaryContainer">#31111D</item>
+        <!-- Error colors -->
+        <item name="colorError">#BA1A1A</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorErrorContainer">#FFDAD6</item>
+        <item name="colorOnErrorContainer">#410002</item>
+        <!-- Background colors -->
         <item name="android:windowBackground">@color/md_theme_light_background</item>
-        <!-- Customize more colors or styles as needed -->
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#E7E0EC</item>
+        <item name="colorOnSurface">#1C1B1F</item>
+        <item name="colorOnSurfaceVariant">#49454F</item>
+        <item name="colorOutline">#79747E</item>
+        <item name="colorOutlineVariant">#CAC4D0</item>
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/md_theme_light_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">#1C1B1F</item>
+        <item name="android:textColorSecondary">#49454F</item>
     </style>
 </resources>

@@ -1,8 +1,6 @@
 package com.example.personalexpensetracker
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
 @Entity(tableName = "expense")
 data class Expense(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -15,5 +13,3 @@ data class Expense(
     val name: String? = null,
     val category: String
 )
-
-
