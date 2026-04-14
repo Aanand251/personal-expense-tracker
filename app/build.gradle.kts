@@ -43,7 +43,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
 
     implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
-    
+
+    // iText PDF library for generating PDF reports
     implementation("com.itextpdf:itextpdf:5.5.13.3")
 
     implementation("androidx.room:room-runtime:2.6.1")
@@ -62,12 +63,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
+    // ML Kit for Receipt Scanner
     implementation("com.google.mlkit:text-recognition:16.0.0")
-    
-
-    implementation("androidx.camera:camera-camera2:1.3.4")
-    implementation("androidx.camera:camera-lifecycle:1.3.4")
-    implementation("androidx.camera:camera-view:1.3.4")
+    implementation("com.google.mlkit:camera:16.0.0-beta3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
