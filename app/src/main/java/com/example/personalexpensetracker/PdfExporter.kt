@@ -1,21 +1,27 @@
 package com.example.personalexpensetracker
+
 import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import java.io.OutputStream
 import java.text.SimpleDateFormat
+import java.text.NumberFormat
 import java.util.*
+
 object PdfExporter {
+
     fun exportExpensesToPdf(expenses: List<Expense>, outputStream: OutputStream): Boolean {
         return try {
             val document = Document(PageSize.A4)
             PdfWriter.getInstance(document, outputStream)
             document.open()
+
             val titleFont = Font(Font.FontFamily.HELVETICA, 20f, Font.BOLD, BaseColor.DARK_GRAY)
             val title = Paragraph("Expense Report\n\n", titleFont)
             title.alignment = Element.ALIGN_CENTER
             document.add(title)
+
             val dateFormatter = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
             val generatedDate = Paragraph(
                 "Generated on: ${dateFormatter.format(Date())}\n\n",
@@ -23,47 +29,65 @@ object PdfExporter {
             )
             generatedDate.alignment = Element.ALIGN_CENTER
             document.add(generatedDate)
+
             val totalAmount = expenses.sumOf { it.amount }
-            val summaryFont = Font(Font.FontFamily.HELVETICA, 12f, Font.BOLD, BaseColor.BLACK)
+
+            // ✅ safer currency formatting (no encoding issue)
+            val currencyFormatter = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+
             val summary = Paragraph(
-                "Total Expenses: â‚¹${"%.2f".format(totalAmount)}\n" +
-                "Number of Transactions: ${expenses.size}\n\n",
-                summaryFont
+                "Total Expenses: ${currencyFormatter.format(totalAmount)}\n" +
+                        "Number of Transactions: ${expenses.size}\n\n",
+                Font(Font.FontFamily.HELVETICA, 12f, Font.BOLD, BaseColor.BLACK)
             )
             document.add(summary)
+
             val table = PdfPTable(4)
             table.widthPercentage = 100f
             table.setWidths(floatArrayOf(1f, 2f, 2f, 2f))
+
             val headerFont = Font(Font.FontFamily.HELVETICA, 12f, Font.BOLD, BaseColor.WHITE)
-            val headerCells = listOf("No.", "Category", "Amount", "Date")
-            headerCells.forEach { headerText ->
-                val cell = PdfPCell(Phrase(headerText, headerFont))
-                cell.backgroundColor = BaseColor(52, 152, 219) // Blue header
+            val headers = listOf("No.", "Category", "Amount", "Date")
+
+            headers.forEach {
+                val cell = PdfPCell(Phrase(it, headerFont))
+                cell.backgroundColor = BaseColor(52, 152, 219)
                 cell.horizontalAlignment = Element.ALIGN_CENTER
-                cell.verticalAlignment = Element.ALIGN_MIDDLE
                 cell.setPadding(10f)
                 table.addCell(cell)
             }
+
             val rowFont = Font(Font.FontFamily.HELVETICA, 10f, Font.NORMAL, BaseColor.BLACK)
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
             expenses.forEachIndexed { index, expense ->
-                val cellNo = PdfPCell(Phrase("${index + 1}", rowFont))
-                cellNo.horizontalAlignment = Element.ALIGN_CENTER
-                cellNo.setPadding(8f)
-                table.addCell(cellNo)
-                val cellCategory = PdfPCell(Phrase(expense.category, rowFont))
-                cellCategory.setPadding(8f)
-                table.addCell(cellCategory)
-                val cellAmount = PdfPCell(Phrase("â‚¹${"%.2f".format(expense.amount)}", rowFont))
-                cellAmount.horizontalAlignment = Element.ALIGN_RIGHT
-                cellAmount.setPadding(8f)
-                table.addCell(cellAmount)
-                val cellDate = PdfPCell(Phrase(dateFormat.format(Date(expense.date)), rowFont))
-                cellDate.horizontalAlignment = Element.ALIGN_CENTER
-                cellDate.setPadding(8f)
-                table.addCell(cellDate)
+
+                table.addCell(PdfPCell(Phrase("${index + 1}", rowFont)).apply {
+                    horizontalAlignment = Element.ALIGN_CENTER
+                    setPadding(8f)
+                })
+
+                table.addCell(PdfPCell(Phrase(expense.category, rowFont)).apply {
+                    setPadding(8f)
+                })
+
+                table.addCell(PdfPCell(Phrase(
+                    currencyFormatter.format(expense.amount), rowFont
+                )).apply {
+                    horizontalAlignment = Element.ALIGN_RIGHT
+                    setPadding(8f)
+                })
+
+                table.addCell(PdfPCell(Phrase(
+                    dateFormat.format(Date(expense.date)), rowFont
+                )).apply {
+                    horizontalAlignment = Element.ALIGN_CENTER
+                    setPadding(8f)
+                })
             }
+
             document.add(table)
+
             document.add(Paragraph("\n"))
             val footer = Paragraph(
                 "This report was automatically generated by Personal Expense Tracker",
@@ -71,8 +95,10 @@ object PdfExporter {
             )
             footer.alignment = Element.ALIGN_CENTER
             document.add(footer)
+
             document.close()
             outputStream.close()
+
             true
         } catch (e: Exception) {
             e.printStackTrace()

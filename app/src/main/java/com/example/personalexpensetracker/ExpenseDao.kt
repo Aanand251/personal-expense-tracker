@@ -19,7 +19,7 @@ interface ExpenseDao {
     @Query("SELECT * FROM expense WHERE userId = :userId AND isFixed = 1 ORDER BY date DESC")
     fun getFixedExpenses(userId: String): Flow<List<Expense>>
     @Query("SELECT SUM(amount) FROM expense WHERE userId = :userId")
-    fun getTotalExpenses(userId: String): Flow<Double>
+    fun getTotalExpenses(userId: String): Flow<Double?>
     @Query("SELECT * FROM expense ORDER BY id DESC")
     fun getAllExpenses(): LiveData<List<Expense>>
     @Query("SELECT * FROM expense WHERE userId = :userId AND date BETWEEN :start AND :end ORDER BY date DESC")

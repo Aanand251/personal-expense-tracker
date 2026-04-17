@@ -23,7 +23,7 @@ class LoanActivity : AppCompatActivity() {
     private lateinit var tvTotalGiven: TextView
     private lateinit var tvTotalTaken: TextView
     private lateinit var tabLayout: TabLayout
-    private var currentFilter = "ALL"
+    private var currentFilter = "ALL" // ALL, GIVEN, TAKEN
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

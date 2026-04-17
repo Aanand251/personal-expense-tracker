@@ -2,11 +2,13 @@ package com.example.personalexpensetracker
 import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
+import java.text.NumberFormat
+import java.util.Locale
 data class CategoryPrediction(
     val category: String,
     val predictedAmount: Double,
-    val trend: String,
-    val confidenceScore: Int,
+    val trend: String, // "increasing", "decreasing", "stable"
+    val confidenceScore: Int, // 0-100
     val lastMonthAmount: Double,
     val changePercentage: Double
 )
@@ -131,31 +133,32 @@ object PredictionHelper {
         val stdDev = sqrt(variance)
         val cv = (stdDev / mean) * 100
         val baseConfidence = when {
-            cv < 10 -> 95
-            cv < 20 -> 85
-            cv < 30 -> 75
-            cv < 40 -> 65
-            cv < 50 -> 55
-            else -> 45
+            cv < 10 -> 95  // Very consistent
+            cv < 20 -> 85  // Consistent
+            cv < 30 -> 75  // Moderately consistent
+            cv < 40 -> 65  // Somewhat variable
+            cv < 50 -> 55  // Variable
+            else -> 45     // Highly variable
         }
         val dataBonus = minOf(amounts.size * 2, 10)
         return (baseConfidence + dataBonus).coerceIn(0, 100)
     }
     fun formatCurrency(amount: Double): String {
-        return "â‚¹%.2f".format(amount)
+        val format = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+        return format.format(amount)
     }
     fun getTrendEmoji(trend: String): String {
         return when (trend) {
-            "increasing" -> "ðŸ“ˆ"
-            "decreasing" -> "ðŸ“‰"
-            else -> "âž¡ï¸"
+            "increasing" -> "📈"
+            "decreasing" -> "📉"
+            else -> "➡️"
         }
     }
     fun getConfidenceColor(score: Int): String {
         return when {
-            score >= 80 -> "#4CAF50"
-            score >= 60 -> "#FFC107"
-            else -> "#FF5722"
+            score >= 80 -> "#4CAF50"  // Green
+            score >= 60 -> "#FFC107"  // Amber
+            else -> "#FF5722"         // Red
         }
     }
 }

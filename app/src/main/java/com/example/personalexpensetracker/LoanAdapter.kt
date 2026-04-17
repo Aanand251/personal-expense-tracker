@@ -46,7 +46,7 @@ class LoanAdapter(
         holder.tvPersonName.text = loan.personName
         holder.tvLoanType.text = if (loan.type == "GIVEN") " Money Lent" else " Money Borrowed"
         holder.tvLoanType.setTextColor(
-            if (loan.type == "GIVEN") Color.parseColor("#4CAF50") 
+            if (loan.type == "GIVEN") Color.parseColor("#4CAF50")
             else Color.parseColor("#F44336")
         )
 
@@ -66,7 +66,7 @@ class LoanAdapter(
         holder.tvAmount.text = currencyFormat.format(loan.amount)
         holder.tvRemaining.text = currencyFormat.format(remaining)
         holder.tvRemaining.setTextColor(
-            if (remaining > 0) Color.parseColor("#F44336") 
+            if (remaining > 0) Color.parseColor("#F44336")
             else Color.parseColor("#4CAF50")
         )
 
@@ -76,9 +76,17 @@ class LoanAdapter(
         holder.tvDate.text = " ${dateFormat.format(Date(loan.date))}"
         holder.tvDueDate.text = " Due: ${dateFormat.format(Date(loan.dueDate))}"
 
-        if (loan.dueDate < System.currentTimeMillis() && loan.status != "SETTLED") {
+        val currentTime = System.currentTimeMillis()
+        if (loan.dueDate < currentTime && loan.status != "SETTLED") {
             holder.tvDueDate.setTextColor(Color.parseColor("#D32F2F"))
-            holder.tvDueDate.text = " OVERDUE: ${dateFormat.format(Date(loan.dueDate))}"
+
+            // Calculate interest for overdue loan
+            val daysOverdue = ((currentTime - loan.dueDate) / (24 * 60 * 60 * 1000.0)).toInt()
+            val monthlyRate = loan.interestRate / 12.0 / 100.0
+            val dailyRate = monthlyRate / 30.0
+            val interestAmount = loan.amount * dailyRate * daysOverdue
+
+            holder.tvDueDate.text = " OVERDUE: ${dateFormat.format(Date(loan.dueDate))} | Interest: ${currencyFormat.format(interestAmount)}"
         } else {
             holder.tvDueDate.setTextColor(Color.parseColor("#757575"))
         }

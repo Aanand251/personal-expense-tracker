@@ -60,9 +60,12 @@ class LoanViewModel(application: Application) : AndroidViewModel(application) {
             repository.addPayment(payment)
             val loan = repository.getLoanById(loanId)
             if (loan != null) {
+                // Calculate and add interest if overdue
+                val updatedLoan = calculateAndApplyInterest(loan)
+
                 val totalPaid = repository.getTotalPaidAmount(loanId)
-                val remaining = loan.amount - totalPaid
-                val updatedLoan = loan.copy(
+                val remaining = updatedLoan.amount - totalPaid
+                val finalLoan = updatedLoan.copy(
                     paidAmount = totalPaid,
                     status = when {
                         remaining <= 0 -> "SETTLED"
@@ -70,10 +73,33 @@ class LoanViewModel(application: Application) : AndroidViewModel(application) {
                         else -> "ACTIVE"
                     }
                 )
-                repository.updateLoan(updatedLoan)
+                repository.updateLoan(finalLoan)
             }
             onComplete()
         }
+    }
+
+    private fun calculateAndApplyInterest(loan: Loan): Loan {
+        val currentTime = System.currentTimeMillis()
+        val dueDate = loan.dueDate
+
+        // Check if loan is overdue
+        if (currentTime > dueDate && loan.interestRate > 0 && loan.status != "SETTLED") {
+            // Calculate days overdue
+            val daysOverdue = ((currentTime - dueDate) / (24 * 60 * 60 * 1000.0)).toInt()
+
+            // Calculate interest: Monthly interest = (Principal * Rate%) / 12 / 30 * Days
+            // Assuming interestRate is annual percentage
+            val monthlyRate = loan.interestRate / 12.0 / 100.0
+            val dailyRate = monthlyRate / 30.0
+            val interestAmount = loan.amount * dailyRate * daysOverdue
+
+            // Add interest to loan amount
+            val newAmount = loan.amount + interestAmount
+
+            return loan.copy(amount = newAmount)
+        }
+        return loan
     }
     fun getPaymentsForLoan(loanId: Int): LiveData<List<LoanPayment>> {
         return repository.getPaymentsForLoan(loanId).asLiveData()

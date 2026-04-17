@@ -10,7 +10,7 @@ class ExpenseRepository(private val expenseDao: ExpenseDao, private val SavingsD
     fun getExpensesForUser(userId: String): List<Expense> {
         return expenseDao.getExpensesByUser(userId)
     }
-    fun getTotalExpenses(userId: String): Flow<Double> {
+    fun getTotalExpenses(userId: String): Flow<Double?> {
         return expenseDao.getTotalExpenses(userId)
     }
     fun getFixedExpenses(userId: String): Flow<List<Expense>> {
